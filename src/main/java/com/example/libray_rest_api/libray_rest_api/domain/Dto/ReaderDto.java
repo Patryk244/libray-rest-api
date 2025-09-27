@@ -6,7 +6,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public class ReaderDto {
-    private Long reader_id;
+    private Long id;
     private String firstname;
     private String lastname;
     private LocalDate creation_date;

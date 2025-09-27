@@ -9,7 +9,7 @@ import java.util.List;
 public class ReaderMapper {
     public Reader mapToReader(ReaderDto readerDto) {
         return new Reader(
-                readerDto.getReader_id(),
+                readerDto.getId(),
                 readerDto.getFirstname(),
                 readerDto.getLastname(),
                 readerDto.getCreation_date()
@@ -18,7 +18,7 @@ public class ReaderMapper {
 
     public ReaderDto mapToReaderDto(Reader reader) {
         return new ReaderDto(
-                reader.getReader_id(),
+                reader.getId(),
                 reader.getFirstname(),
                 reader.getLastname(),
                 reader.getCreation_date()

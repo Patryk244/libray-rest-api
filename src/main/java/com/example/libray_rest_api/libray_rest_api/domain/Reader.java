@@ -13,11 +13,11 @@ import java.time.LocalDate;
 public class Reader {
     @Id
     @GeneratedValue
-    private Long reader_id;
+    private Long id;
     @Column(name = "firstname")
     private String firstname;
     @Column(name = "lastname")
     private String lastname;
     @Column(name = "creation_date")
-    private LocalDate creation_date = LocalDate.now();
+    private LocalDate creation_date;
 }
