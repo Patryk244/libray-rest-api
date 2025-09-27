@@ -16,7 +16,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/v1/readers")
-public class ReaderController {
+public class ReaderController implements ServiceController <ReaderDto> {
 
     @Autowired
     private ReaderDbService readerDbService;
@@ -25,12 +25,12 @@ public class ReaderController {
     private ReaderMapper readerMapper;
 
     @GetMapping
-    public List<ReaderDto> findAllReader() {
+    public List<ReaderDto> findAll() {
         return readerMapper.mapToReaderDtoList(readerDbService.findAllFromDataBase());
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createReader(@RequestBody ReaderDto readerDto) {
+    public void create(@RequestBody ReaderDto readerDto) {
         try {
             Reader reader = readerMapper.mapToReader(new ReaderDto(
                     null,
@@ -46,7 +46,7 @@ public class ReaderController {
 
     @Transactional
     @DeleteMapping(value = "/deleteById/{reader_id}")
-    public ResponseEntity<Void> deleteReaderById(@PathVariable Long reader_id) {
+    public ResponseEntity<Void> remove(@PathVariable Long reader_id) {
         if (readerDbService.existsByIdFromDataBase(reader_id)) {
             readerDbService.deleteByIdFromDataBase(reader_id);
         } else {
