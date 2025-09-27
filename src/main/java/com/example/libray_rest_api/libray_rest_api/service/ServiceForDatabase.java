@@ -6,4 +6,5 @@ public interface ServiceForDatabase<T> {
     void deleteAllFromDataBase();
     List<T> findAllFromDataBase();
     void deleteByIdFromDataBase(final Long id);
+    boolean existsByIdFromDataBase(final Long id);
 }

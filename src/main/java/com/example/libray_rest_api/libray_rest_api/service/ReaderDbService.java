@@ -32,7 +32,11 @@ public class ReaderDbService implements ServiceForDatabase <Reader> {
     }
 
     @Transactional
-    public void deleteByIdFromDataBase(final Long reader_id) throws ReaderNotFound {
+    public void deleteByIdFromDataBase(final Long reader_id) {
         readerRepository.deleteById(reader_id);
+    }
+
+    public boolean existsByIdFromDataBase(final Long id) {
+        return readerRepository.existsById(id);
     }
 }
