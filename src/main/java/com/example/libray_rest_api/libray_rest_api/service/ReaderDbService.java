@@ -1,8 +1,6 @@
 package com.example.libray_rest_api.libray_rest_api.service;
 
-import com.example.libray_rest_api.libray_rest_api.domain.Dto.ReaderDto;
 import com.example.libray_rest_api.libray_rest_api.domain.Reader;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotFound;
 import com.example.libray_rest_api.libray_rest_api.repository.ReaderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

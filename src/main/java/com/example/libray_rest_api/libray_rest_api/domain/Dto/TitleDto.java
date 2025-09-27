@@ -5,8 +5,8 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 public class TitleDto {
-    private Long title_id;
+    private Long id;
     private String title;
     private String author;
-    private String releaseDate;
+    private int releaseDate;
 }

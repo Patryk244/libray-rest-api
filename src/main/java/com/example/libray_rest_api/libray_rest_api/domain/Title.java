@@ -1,6 +1,7 @@
 package com.example.libray_rest_api.libray_rest_api.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 
@@ -13,11 +14,21 @@ import lombok.*;
 public class Title {
     @Id
     @GeneratedValue
-    private Long title_id;
-    @Column(name = "title")
+    private Long id;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 4, max = 20, message = "Title must contains between 4 and 20 characters.")
+    @Column(name = "title", unique = true)
     private String title;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 4, max = 25, message = "Title author contains between 4 and 25 characters.")
     @Column(name = "author")
     private String author;
+
+    @NotNull
     @Column(name = "releaseDate")
-    private String releaseDate;
+    private int releaseDate;
 }

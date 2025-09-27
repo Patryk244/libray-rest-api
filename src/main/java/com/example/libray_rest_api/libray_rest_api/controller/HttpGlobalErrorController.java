@@ -2,6 +2,8 @@ package com.example.libray_rest_api.libray_rest_api.controller;
 
 import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotFound;
 import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotPossibleToAdd;
+import com.example.libray_rest_api.libray_rest_api.domain.exception.TitleNotFound;
+import com.example.libray_rest_api.libray_rest_api.domain.exception.TitleNotPossibleToAdd;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -11,11 +13,21 @@ public class HttpGlobalErrorController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ReaderNotFound.class)
     public ResponseEntity<Object> handleReaderNotFound(ReaderNotFound ex) {
-        return new ResponseEntity<>("Reader not found", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Reader not found!", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ReaderNotPossibleToAdd.class)
     public ResponseEntity<Object> handleReaderNotPossibleToAdd(ReaderNotPossibleToAdd ex) {
-        return new ResponseEntity<>("Reader not possible to add. You should correct your data!!!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Reader not possible to add. You should checking correct your data!!!", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TitleNotFound.class)
+    public ResponseEntity<Object> handleTitleNotFound(TitleNotFound ex) {
+        return new ResponseEntity<>("Title not found!", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TitleNotPossibleToAdd.class)
+    public ResponseEntity<Object> handleTitleNotPossibleToAdd(TitleNotPossibleToAdd ex) {
+        return new ResponseEntity<>("Title not possible to add. You should checking correct your data!!!", HttpStatus.BAD_REQUEST);
     }
 }

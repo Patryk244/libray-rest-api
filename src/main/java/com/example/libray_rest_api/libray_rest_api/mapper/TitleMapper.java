@@ -9,7 +9,7 @@ import java.util.List;
 public class TitleMapper {
     public Title mapToTitle(TitleDto titleDto) {
         return new Title(
-                titleDto.getTitle_id(),
+                titleDto.getId(),
                 titleDto.getTitle(),
                 titleDto.getAuthor(),
                 titleDto.getReleaseDate()
@@ -18,7 +18,7 @@ public class TitleMapper {
 
     public TitleDto mapToTitleDto(Title title) {
         return new TitleDto(
-                title.getTitle_id(),
+                title.getId(),
                 title.getTitle(),
                 title.getAuthor(),
                 title.getReleaseDate()
