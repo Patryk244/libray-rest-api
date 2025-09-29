@@ -5,13 +5,11 @@ import com.example.libray_rest_api.libray_rest_api.repository.TitleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.io.Serializable;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TitleDbService implements ServiceForDatabase <Title> {
+public class TitleDbService implements ServiceForDatabase <Title>, AdditionalServiceForTitle {
 
     private final TitleRepository titleRepository;
 
@@ -37,5 +35,10 @@ public class TitleDbService implements ServiceForDatabase <Title> {
     @Override
     public boolean existsByIdFromDataBase(Long id) {
         return titleRepository.existsById(id);
+    }
+
+    @Override
+    public Title findByTitle(String title) {
+        return titleRepository.findByTitle(title);
     }
 }

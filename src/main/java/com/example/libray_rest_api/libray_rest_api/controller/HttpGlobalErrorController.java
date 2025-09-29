@@ -1,9 +1,6 @@
 package com.example.libray_rest_api.libray_rest_api.controller;
 
-import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotFound;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotPossibleToAdd;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.TitleNotFound;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.TitleNotPossibleToAdd;
+import com.example.libray_rest_api.libray_rest_api.domain.exception.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -29,5 +26,10 @@ public class HttpGlobalErrorController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TitleNotPossibleToAdd.class)
     public ResponseEntity<Object> handleTitleNotPossibleToAdd(TitleNotPossibleToAdd ex) {
         return new ResponseEntity<>("Title not possible to add. You should checking correct your data!!!", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CopyOfBookNotFound.class)
+    public ResponseEntity<Object> handleCopyOfBookNotFound(Exception ex) {
+        return new ResponseEntity<>("Copy of book not found!", HttpStatus.BAD_REQUEST);
     }
 }

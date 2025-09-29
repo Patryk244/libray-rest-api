@@ -28,8 +28,6 @@ public class Reader {
     @Column(name = "lastname")
     private String lastname;
 
-    @NotNull
-    @NotBlank
     @FutureOrPresent(message = "Time must be current or next. Never be previous")
     @Column(name = "creation_date")
     private LocalDate creation_date;

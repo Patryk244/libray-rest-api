@@ -27,6 +27,15 @@ public class TitleController implements ServiceController <TitleDto> {
         return titleMapper.mapToTitleDtoList(titleDbService.findAllFromDataBase());
     }
 
+    @GetMapping(value = "/findByTitle/{title}")
+    public TitleDto findByTitle(@PathVariable String title) {
+        try {
+            return titleMapper.mapToTitleDto(titleDbService.findByTitle(title));
+        } catch (Exception e) {
+            throw new TitleNotFound();
+        }
+    }
+
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void create(@RequestBody TitleDto titleDto) {
         try {

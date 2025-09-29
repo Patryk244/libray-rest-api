@@ -9,4 +9,5 @@ import java.util.*;
 @Repository
 public interface TitleRepository extends CrudRepository<Title, Long> {
     List<Title> findAll();
+    Title findByTitle(String title);
 }

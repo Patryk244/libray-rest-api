@@ -18,7 +18,7 @@ public class Title {
 
     @NotNull
     @NotBlank
-    @Size(min = 4, max = 20, message = "Title must contains between 4 and 20 characters.")
+    @Size(min = 4, max = 80, message = "Title must contains between 4 and 80 characters.")
     @Column(name = "title", unique = true)
     private String title;
 
