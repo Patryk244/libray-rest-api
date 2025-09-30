@@ -1,8 +1,8 @@
 package com.example.libray_rest_api.libray_rest_api.controller;
 
 import com.example.libray_rest_api.libray_rest_api.domain.CopyOfBook;
-import com.example.libray_rest_api.libray_rest_api.domain.Dto.CopyOfBookDto;
-import com.example.libray_rest_api.libray_rest_api.domain.Dto.TitleDto;
+import com.example.libray_rest_api.libray_rest_api.domain.Dto.*;
+import com.example.libray_rest_api.libray_rest_api.domain.Title;
 import com.example.libray_rest_api.libray_rest_api.domain.enums.StatusCopyOfBook;
 import com.example.libray_rest_api.libray_rest_api.domain.exception.*;
 import com.example.libray_rest_api.libray_rest_api.mapper.*;
@@ -17,7 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/copyOfBooks")
-public class CopyOfBookController implements ServiceController<CopyOfBookDto>, AdditionalServiceControllerForBook {
+public class CopyOfBookController implements ServiceControllerForCopyOfBook<CopyOfBookDto> {
+
     @Autowired
     private CopyOfBookDbService copyOfBookDbService;
 
@@ -25,77 +26,43 @@ public class CopyOfBookController implements ServiceController<CopyOfBookDto>, A
     private TitleDbService titleDbService;
 
     @Autowired
-    private TitleMapper titleMapper;
-
-    @Autowired
     private CopyOfBookMapper copyOfBookMapper;
-
-    private TitleDto foundTitle = null;
-
 
     @Override
     @GetMapping
-    public List<CopyOfBookDto> findAll() {
+    public List<CopyOfBookDto> getAll() {
         return copyOfBookMapper.mapToCopyOfBookDtoList(copyOfBookDbService.findAllFromDataBase());
     }
 
-    @GetMapping(value = "/findById/{id}")
-    public CopyOfBookDto findById(@PathVariable Long id) {
-        System.out.println(copyOfBookDbService.findByBookId(id));
-        System.out.println("id: " + id);
-        return copyOfBookMapper.mapToCopyOfBookDto(copyOfBookDbService.findByBookId(id));
-    }
-
-    @PostMapping(value = "/addByTitle/{title}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void create(@PathVariable String title) {
-        System.out.println("Searching title: " + title);
-        if (titleDbService.findByTitle(title) != null) {
-            CopyOfBook copyOfBook = copyOfBookMapper.mapperToCopyOfBook(new CopyOfBookDto(
-                    null,
-                    titleDbService.findByTitle(title).getId(),
-                    StatusCopyOfBook.IN_CIRCULATION
-            ));
-            copyOfBookDbService.saveToDataBase(copyOfBook);
-        } else {
-            System.out.println("Title not found");
-        }
-    }
-
-    @Override
-    @DeleteMapping(value = "/deleteById/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
-        if (copyOfBookDbService.existsByIdFromDataBase(id)) {
-            copyOfBookDbService.deleteByIdFromDataBase(id);
-        } else {
-            throw new CopyOfBookNotFound();
-        }
-        return ResponseEntity.ok().build();
-    }
-
-
-    @Override
-    @GetMapping(value = "/findByTitleAndCount/{title}")
-    public String countCopyOfBookByTitle(@PathVariable String title) {
-        if (titleDbService.findByTitle(title) != null) {
-            foundTitle = titleMapper.mapToTitleDto(titleDbService.findByTitle(title));
-            return "Title: " + foundTitle.getTitle() + " has copy of book: "
-                    + copyOfBookDbService.countByIdFromDataBase(foundTitle.getId()) + " quantity -> id_book: " + foundTitle.getId();
-        } else {
-            foundTitle = null;
+    @GetMapping(value = "/countTitleBooks/{title}")
+    public String countTitleBooksByTitle(@PathVariable String title) {
+        Title foundId = titleDbService.findByTitle(title);
+        if (foundId == null) {
             throw new TitleNotFound();
         }
-
+        List<CopyOfBook> foundBooks = copyOfBookDbService.findByTitle(foundId);
+        int size = foundBooks.size();
+        return String.format("The number of copies of the title: %s is: %d", title, size);
     }
 
-    @Transactional
-    @PutMapping("/changeStatus/id/{id}/setStatus")
-    public void changeStatusById(@PathVariable Long id, @RequestBody CopyOfBookDto statusUpdate) {
-        CopyOfBook existingCopyOfBook = copyOfBookDbService.findByBookId(id);
-        existingCopyOfBook.setStatusOfBook(StatusCopyOfBook.determineStatus(statusUpdate.getStatusOfBook().toString()));
-       // existingCopyOfBook.setStatusOfBook(statusUpdate.getStatusOfBook());
-        copyOfBookDbService.saveToDataBase(existingCopyOfBook);
+    @PostMapping(value = "/addByTitle/{title}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CopyOfBook> createCopyOfBook(@PathVariable String title) {
+        Title found = titleDbService.findByTitle(title);
+        CopyOfBook copyOfBook = copyOfBookMapper.mapperToCopyOfBook(new CopyOfBookDto(
+                null,
+                found,
+                StatusCopyOfBook.IN_CIRCULATION
+        ));
+        copyOfBookDbService.saveToDataBase(copyOfBook);
+        return ResponseEntity.ok(copyOfBook);
     }
-
-    public void create(CopyOfBookDto copyOfBookDto) {
+    
+    @Override
+    @PutMapping(value = "/setStatusById/{copyId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CopyOfBook> setStatusById(@PathVariable Long copyId, @RequestBody CopyOfBookDto newStatus) {
+        CopyOfBook findingCopy = copyOfBookDbService.findByIdFromDataBase(copyId);
+        findingCopy.setStatusOfBook(newStatus.getStatusOfBook());
+        copyOfBookDbService.saveToDataBase(findingCopy);
+        return ResponseEntity.ok(findingCopy);
     }
 }

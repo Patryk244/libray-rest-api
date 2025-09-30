@@ -1,7 +1,7 @@
 package com.example.libray_rest_api.libray_rest_api.service;
 
-import com.example.libray_rest_api.libray_rest_api.domain.Dto.CopyOfBookDto;
 import com.example.libray_rest_api.libray_rest_api.domain.CopyOfBook;
+import com.example.libray_rest_api.libray_rest_api.domain.Title;
 import com.example.libray_rest_api.libray_rest_api.repository.CopyOfBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,17 +33,16 @@ public class CopyOfBookDbService implements ServiceForDatabase <CopyOfBook> {
     public void deleteByIdFromDataBase(Long id) {
         copyOfBookRepository.deleteById(id);
     }
-
-    public CopyOfBook findByBookId(Long bookId) {
-        return copyOfBookRepository.findCopyOfBookById(bookId);
-    }
-
     @Override
     public boolean existsByIdFromDataBase(Long id) {
         return copyOfBookRepository.existsById(id);
     }
 
-    public long countByIdFromDataBase(Long id) {
-        return copyOfBookRepository.countCopyOfBookByBookId(id);
+    public CopyOfBook findByIdFromDataBase(Long id) {
+        return copyOfBookRepository.findByCopyId(id);
+    }
+
+    public List<CopyOfBook> findByTitle(Title title) {
+        return copyOfBookRepository.findByTitle(title);
     }
 }

@@ -4,7 +4,6 @@ import com.example.libray_rest_api.libray_rest_api.domain.Dto.TitleDto;
 import com.example.libray_rest_api.libray_rest_api.domain.Title;
 import com.example.libray_rest_api.libray_rest_api.domain.exception.*;
 import com.example.libray_rest_api.libray_rest_api.mapper.TitleMapper;
-import com.example.libray_rest_api.libray_rest_api.service.ServiceForDatabase;
 import com.example.libray_rest_api.libray_rest_api.service.TitleDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -50,7 +49,6 @@ public class TitleController implements ServiceController <TitleDto> {
             throw new TitleNotPossibleToAdd();
         }
     }
-
 
     @DeleteMapping(value = "/removeById/{id}")
     public ResponseEntity<Void> remove(@PathVariable("id") Long id) {

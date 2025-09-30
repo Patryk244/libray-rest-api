@@ -14,10 +14,11 @@ import lombok.*;
 public class CopyOfBook {
     @Id
     @GeneratedValue
-    private Long id;
+    private Long copyId;
 
-    @Column(nullable = false, name = "book_id")
-    private Long bookId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "titleId")
+    private Title title;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "statusOfBook")
@@ -25,6 +26,6 @@ public class CopyOfBook {
 
     @Override
     public String toString() {
-        return "Id: " + id + ", BookId: " + bookId + ", Status: " + statusOfBook;
+        return "Id: " + copyId + " Status: " + statusOfBook;
     }
 }

@@ -31,4 +31,9 @@ public class Title {
     @NotNull
     @Column(name = "releaseDate")
     private int releaseDate;
+
+    @Override
+    public String toString() {
+        return "Id: " + id + ", Title: " + title + ", Author: " + author + ", ReleaseDate: " + releaseDate;
+    }
 }

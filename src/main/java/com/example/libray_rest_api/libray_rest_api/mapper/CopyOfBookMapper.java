@@ -10,16 +10,16 @@ public class CopyOfBookMapper {
 
     public CopyOfBook mapperToCopyOfBook(CopyOfBookDto copyOfBookDto) {
         return new CopyOfBook(
-                copyOfBookDto.getId(),
-                copyOfBookDto.getBookId(),
+                copyOfBookDto.getCopyId(),
+                copyOfBookDto.getTitleId(),
                 copyOfBookDto.getStatusOfBook()
         );
     }
 
     public CopyOfBookDto mapToCopyOfBookDto(CopyOfBook copyOfBook) {
         return new CopyOfBookDto(
-                copyOfBook.getId(),
-                copyOfBook.getBookId(),
+                copyOfBook.getCopyId(),
+                copyOfBook.getTitle(),
                 copyOfBook.getStatusOfBook()
         );
     }

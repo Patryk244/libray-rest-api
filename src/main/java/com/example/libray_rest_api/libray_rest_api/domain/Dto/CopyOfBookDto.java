@@ -1,5 +1,6 @@
 package com.example.libray_rest_api.libray_rest_api.domain.Dto;
 
+import com.example.libray_rest_api.libray_rest_api.domain.Title;
 import com.example.libray_rest_api.libray_rest_api.domain.enums.StatusCopyOfBook;
 import lombok.*;
 
@@ -7,11 +8,11 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 public class CopyOfBookDto {
-    private Long id;
-    private Long bookId;
+    private Long CopyId;
+    private Title titleId;
     private StatusCopyOfBook statusOfBook;
     @Override
     public String toString() {
-        return "Id: " + id + ", BookId: " + bookId + ", Status: " + statusOfBook;
+        return "Id: " + CopyId + ", BookId: " + titleId + ", Status: " + statusOfBook;
     }
 }

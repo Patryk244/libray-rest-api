@@ -37,4 +37,6 @@ public class ReaderDbService implements ServiceForDatabase <Reader> {
     public boolean existsByIdFromDataBase(final Long id) {
         return readerRepository.existsById(id);
     }
+
+
 }
