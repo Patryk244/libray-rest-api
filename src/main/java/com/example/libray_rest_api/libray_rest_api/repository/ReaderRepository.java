@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ReaderRepository extends CrudRepository<Reader, Long> {
     List<Reader> findAll();
+
 }

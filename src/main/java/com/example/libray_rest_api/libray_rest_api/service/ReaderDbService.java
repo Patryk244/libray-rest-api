@@ -6,7 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +36,10 @@ public class ReaderDbService implements ServiceForDatabase <Reader> {
 
     public boolean existsByIdFromDataBase(final Long id) {
         return readerRepository.existsById(id);
+    }
+
+    public Optional<Reader> findByIdFromDataBase(final Long readerId) {
+        return readerRepository.findById(readerId);
     }
 
 

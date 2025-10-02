@@ -31,4 +31,9 @@ public class Reader {
     @FutureOrPresent(message = "Time must be current or next. Never be previous")
     @Column(name = "creation_date")
     private LocalDate creation_date;
+
+    @Override
+    public String toString() {
+        return "Id: " + id + " firstname: " + firstname + " lastname: " + lastname + " creation_date: " + creation_date;
+    }
 }

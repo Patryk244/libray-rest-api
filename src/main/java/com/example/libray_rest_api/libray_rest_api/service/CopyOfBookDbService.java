@@ -10,13 +10,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CopyOfBookDbService implements ServiceForDatabase <CopyOfBook> {
+public class CopyOfBookDbService implements ServiceForDatabase<CopyOfBook> {
 
     private final CopyOfBookRepository copyOfBookRepository;
 
     @Override
     public CopyOfBook saveToDataBase(CopyOfBook object) {
         return copyOfBookRepository.save(object);
+    }
+
+    public List<CopyOfBook> saveAll(List<CopyOfBook> books) {
+        return (List<CopyOfBook>) copyOfBookRepository.saveAll(books);
     }
 
     @Override
@@ -33,6 +37,7 @@ public class CopyOfBookDbService implements ServiceForDatabase <CopyOfBook> {
     public void deleteByIdFromDataBase(Long id) {
         copyOfBookRepository.deleteById(id);
     }
+
     @Override
     public boolean existsByIdFromDataBase(Long id) {
         return copyOfBookRepository.existsById(id);
