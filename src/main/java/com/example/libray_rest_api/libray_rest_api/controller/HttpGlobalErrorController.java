@@ -32,4 +32,9 @@ public class HttpGlobalErrorController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleCopyOfBookNotFound(Exception ex) {
         return new ResponseEntity<>("Copy of book not found!", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BookIsBorrowed.class)
+    public ResponseEntity<Object> handleBookIsBorrowed(BookIsBorrowed ex) {
+        return new ResponseEntity<>("Book is borrowed!", HttpStatus.BAD_REQUEST);
+    }
 }

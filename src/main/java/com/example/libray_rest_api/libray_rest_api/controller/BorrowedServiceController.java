@@ -6,6 +6,7 @@ import com.example.libray_rest_api.libray_rest_api.domain.Dto.BorrowedServiceDto
 import com.example.libray_rest_api.libray_rest_api.domain.Reader;
 import com.example.libray_rest_api.libray_rest_api.domain.Title;
 import com.example.libray_rest_api.libray_rest_api.domain.enums.StatusCopyOfBook;
+import com.example.libray_rest_api.libray_rest_api.domain.exception.BookIsBorrowed;
 import com.example.libray_rest_api.libray_rest_api.domain.exception.CopyOfBookNotFound;
 import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotFound;
 import com.example.libray_rest_api.libray_rest_api.domain.exception.TitleNotFound;
@@ -55,7 +56,9 @@ public class BorrowedServiceController implements ServiceControllerBorrowed {
     @PostMapping(value = "/add/title/{wantTitle}/readerId/{readerId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BorrowedServiceDto> borrowTitle(@PathVariable String wantTitle, @PathVariable Long readerId) {
         try {
-            bookIsBorrowed(wantTitle);
+            if (bookIsBorrowed(wantTitle, readerId)) {
+                throw new BookIsBorrowed();
+            };
             Optional<CopyOfBook> findAvailableBook = findBookByTitleForCopy(wantTitle).stream()
                     .filter(c -> c.getStatusOfBook().equals(StatusCopyOfBook.IN_CIRCULATION))
                     .findFirst();
@@ -116,16 +119,13 @@ public class BorrowedServiceController implements ServiceControllerBorrowed {
         return borrowedServiceDbService.save(BorrowedService);
     }
 
-    public void bookIsBorrowed(String wantTitle) {
-        List<BorrowedService> isExist = borrowedServiceDbService.findAll();
-
-        System.out.println("Ta ksiazka jest wypozyczona");
-        System.out.println();
-        List<CopyOfBook> foundCopy = findBookByTitleForCopy(wantTitle);
-        for (CopyOfBook copy : foundCopy) {
-            System.out.println(copy.toString());
-        }
-
+    public boolean bookIsBorrowed(String wantTitle, Long readerId) {
+        List<CopyOfBook> possibleCopy =  findBookByTitleForCopy(wantTitle);
+        List<BorrowedService> readerHasBorrowedCopy = borrowedServiceDbService
+                .findByReader(foundReader(readerId));
+        readerHasBorrowedCopy.forEach(has -> {System.out.println(has.toString());});
+        return possibleCopy.stream()
+                .anyMatch(pos -> readerHasBorrowedCopy.stream()
+                        .anyMatch(has -> pos.getCopyId().equals(has.getCopyOfBook().getCopyId())));
     }
-
 }

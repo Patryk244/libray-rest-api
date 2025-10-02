@@ -4,6 +4,7 @@ import com.example.libray_rest_api.libray_rest_api.domain.Dto.BorrowedServiceDto
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,11 +18,12 @@ public class BorrowedService {
     private Long id;
 
     @MapsId
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "copyId")
     private CopyOfBook copyOfBook;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "readerId")
     private Reader reader;
 
     @Column(name = "borrowedDate", nullable = false)
@@ -32,8 +34,7 @@ public class BorrowedService {
 
     @Override
     public String toString() {
-        return "CopyOfBook: " + copyOfBook.getCopyId() +  "Reader Id: " + reader.getId() +
-                "borrowedDate: " + borrowedDate + "returnedDate: " + returnedDate;
+        return "CopyId: " + id + " readerId: " + reader.getId() + " borrowedDate: " + borrowedDate + " returnedDate: " + returnedDate;
     }
 
 }

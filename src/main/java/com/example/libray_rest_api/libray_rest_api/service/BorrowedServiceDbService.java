@@ -2,6 +2,7 @@ package com.example.libray_rest_api.libray_rest_api.service;
 
 import com.example.libray_rest_api.libray_rest_api.domain.BorrowedService;
 import com.example.libray_rest_api.libray_rest_api.domain.CopyOfBook;
+import com.example.libray_rest_api.libray_rest_api.domain.Reader;
 import com.example.libray_rest_api.libray_rest_api.repository.BorrowedServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,9 @@ public class BorrowedServiceDbService implements ServiceDataBaseForBorrowed {
 
     public List<BorrowedService> findByCopyOfBook(CopyOfBook copyOfBook) {
         return borrowedServiceRepository.findByCopyOfBook(copyOfBook);
+    }
+
+    public List<BorrowedService> findByReader(Reader reader) {
+        return borrowedServiceRepository.findByReader(reader);
     }
 }
