@@ -37,4 +37,9 @@ public class HttpGlobalErrorController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleBookIsBorrowed(BookIsBorrowed ex) {
         return new ResponseEntity<>("Book is borrowed!", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BookIsNotLand.class)
+    public ResponseEntity<Object> handleBookIsNotLand(BookIsNotLand ex) {
+        return new ResponseEntity<>("Book is not land!", HttpStatus.BAD_REQUEST);
+    }
 }

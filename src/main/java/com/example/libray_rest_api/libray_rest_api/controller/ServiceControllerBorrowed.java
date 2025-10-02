@@ -7,5 +7,5 @@ import java.util.List;
 public interface ServiceControllerBorrowed {
     List<BorrowedServiceDto> getAll();
     ResponseEntity<BorrowedServiceDto> borrowTitle(String wantTitle, Long readerId);
-    void returnBook(Long copyId);
+    ResponseEntity<BorrowedServiceDto> returnBook(String wantTitle, Long readerId);
 }

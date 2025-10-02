@@ -6,10 +6,7 @@ import com.example.libray_rest_api.libray_rest_api.domain.Dto.BorrowedServiceDto
 import com.example.libray_rest_api.libray_rest_api.domain.Reader;
 import com.example.libray_rest_api.libray_rest_api.domain.Title;
 import com.example.libray_rest_api.libray_rest_api.domain.enums.StatusCopyOfBook;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.BookIsBorrowed;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.CopyOfBookNotFound;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.ReaderNotFound;
-import com.example.libray_rest_api.libray_rest_api.domain.exception.TitleNotFound;
+import com.example.libray_rest_api.libray_rest_api.domain.exception.*;
 import com.example.libray_rest_api.libray_rest_api.mapper.BorrowedServiceMapper;
 import com.example.libray_rest_api.libray_rest_api.service.BorrowedServiceDbService;
 import com.example.libray_rest_api.libray_rest_api.service.CopyOfBookDbService;
@@ -18,6 +15,7 @@ import com.example.libray_rest_api.libray_rest_api.service.TitleDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -71,12 +69,33 @@ public class BorrowedServiceController implements ServiceControllerBorrowed {
         }
     }
 
-    @PutMapping("return/copyOfBook/id/{copy}")
-    public void returnBook(@PathVariable String copy) {}
-
     @Override
-    public void returnBook(Long copyId) {
+    @PutMapping(value = "/land/book/{wantTitle}/reader/id/{readerId}")
+    public ResponseEntity<BorrowedServiceDto> returnBook(@PathVariable String wantTitle,@PathVariable Long readerId) {
+        if (!bookIsBorrowed(wantTitle, readerId)) {
+            throw new BookIsNotLand();
+        } else {
+            System.out.println("Book is borrowed");
+            List<BorrowedService> foundBorrowed = borrowedServiceDbService.findByReader(foundReader(readerId));
+            List<CopyOfBook> copyOfBooksToUpdate = copyOfBookDbService.findByTitle(foundByTitle(wantTitle));
+            Optional<BorrowedService> findActive = findActivePosition(foundBorrowed, copyOfBooksToUpdate);
+            BorrowedService preparesAfterSave = updateToBorrowedService(findActive);
+            return ResponseEntity.ok(borrowedServiceMapper.mapToBorrowedServiceDto(preparesAfterSave));
+        }
+    }
 
+    public void bookIsInCirculationAfterBorrowed(Optional<BorrowedService> findActive) {
+        BorrowedService borrowedService = findActive.get();
+        CopyOfBook copyOfBook = copyOfBookDbService.findByIdFromDataBase(borrowedService.getId());
+        copyOfBook.setStatusOfBook(StatusCopyOfBook.IN_CIRCULATION);
+        copyOfBookDbService.saveToDataBase(copyOfBook);
+    }
+
+    public BorrowedService updateToBorrowedService(Optional<BorrowedService> findActive) {
+        bookIsInCirculationAfterBorrowed(findActive);
+        BorrowedService borrowedService = findActive.get();
+        borrowedService.setReturnedDate(LocalDate.now());
+        return borrowedServiceDbService.save(borrowedService);
     }
 
     public Reader foundReader(Long readerId) {
@@ -98,6 +117,7 @@ public class BorrowedServiceController implements ServiceControllerBorrowed {
         }
         return title;
     }
+
 
     public void updateToCopyOfBook(Optional<CopyOfBook> findAvailableBook) {
         List<CopyOfBook> toSaved = findAvailableBook.stream().toList();
@@ -123,9 +143,17 @@ public class BorrowedServiceController implements ServiceControllerBorrowed {
         List<CopyOfBook> possibleCopy =  findBookByTitleForCopy(wantTitle);
         List<BorrowedService> readerHasBorrowedCopy = borrowedServiceDbService
                 .findByReader(foundReader(readerId));
-        readerHasBorrowedCopy.forEach(has -> {System.out.println(has.toString());});
         return possibleCopy.stream()
                 .anyMatch(pos -> readerHasBorrowedCopy.stream()
                         .anyMatch(has -> pos.getCopyId().equals(has.getCopyOfBook().getCopyId())));
+    }
+
+    public Optional<BorrowedService> findActivePosition(List<BorrowedService> foundBorrowed,
+                                                   List<CopyOfBook> copyOfBooksToUpdate) {
+        return foundBorrowed.stream()
+                .filter(borrowed -> borrowed.getReturnedDate() == null)
+                .filter(borrowed -> copyOfBooksToUpdate.stream()
+                        .anyMatch(copy -> copy.getCopyId().equals(borrowed.getCopyOfBook().getCopyId())))
+                .findFirst();
     }
 }

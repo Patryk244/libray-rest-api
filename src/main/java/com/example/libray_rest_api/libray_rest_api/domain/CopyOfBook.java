@@ -26,6 +26,6 @@ public class CopyOfBook {
 
     @Override
     public String toString() {
-        return "Id: " + copyId + " Status: " + statusOfBook;
+        return "CopyID: " + copyId + " Status: " + statusOfBook + " TitleId: "  + title.getId();
     }
 }
